@@ -1,0 +1,30 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Sandbox REST API",
+    "description": "Sandbox REST API Docs",
+    "version": "23.1.1"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Локальный сервер разработки"
+    }
+  ],
+  "paths": {
+    "/api/catalogue/products": {
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Успешный результат получения списка товаров",
+            "content": {
+              "application/vnd.eselpo.catalogue.products.v1+json":{
+
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
