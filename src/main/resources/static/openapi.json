@@ -19,7 +19,32 @@
             "description": "Успешный результат получения списка товаров",
             "content": {
               "application/vnd.eselpo.catalogue.products.v1+json":{
-
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "title": "Идентификатор товара",
+                        "nullable": false,
+                        "example": "5e0ea466-a385-11ef-8888-531aa9123a36"
+                      },
+                      "title": {
+                        "type": "string",
+                        "title": "Название товара",
+                        "nullable": false,
+                        "example": "Молоко, 3,2%, 1 литр"
+                      },
+                      "details": {
+                        "type": "string",
+                        "title": "Подробное описание товара",
+                        "nullable": true,
+                        "example": "Молоко с жирностью 3,2% в упаковке 1 литр"
+                      }
+                    }
+                  }
+                }
               }
             }
           }
