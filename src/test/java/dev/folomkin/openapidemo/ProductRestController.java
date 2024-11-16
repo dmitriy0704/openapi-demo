@@ -62,4 +62,64 @@ class ProductRestController {
                 );
 
     }
+
+    @Test
+    void createProduct_ReturnsResponseWithStatusCreated() throws Exception {
+
+        // given
+        var requestBuilder = post("/api/catalogue/products")
+                .contentType("application/vnd.eselpo.catalogue.new-product-payload.v1+json")
+                .content("""
+                        {
+                            "title": "Кефир, 3,2%, 0,5 литра",
+                            "details": "Кефир с жирностью 3,2% в упаковке 0,5 литра"
+                        }
+                        """);
+
+        //when
+        this.mockMvc.perform(requestBuilder)
+                //then
+                .andExpectAll(
+                        status().isCreated(),
+                        openApi().isValid("static/openapi.json"),
+                        header().exists(HttpHeaders.LOCATION),
+                        content().contentTypeCompatibleWith("application/vnd.eselpo.catalogue.product.v1+json"),
+                        content().json("""
+                                {
+                                    "title": "Кефир, 3,2%, 0,5 литра",
+                                    "details": "Кефир с жирностью 3,2% в упаковке 0,5 литра"
+                                }
+                                """),
+                        jsonPath("$.id").exists()
+                );
+    }
+
+
+    @Test
+    void createProduct_PayloadIsInvalid_ReturnsResponseWithStatusCreated() throws Exception {
+
+        // given
+        var requestBuilder = post("/api/catalogue/products")
+                .contentType("application/vnd.eselpo.catalogue.new-product-payload.v1+json")
+                .content("""
+                        {
+                            "title": null,
+                            "details": "Кефир с жирностью 3,2% в упаковке 0,5 литра"
+                        }
+                        """);
+
+        //when
+        this.mockMvc.perform(requestBuilder)
+                //then
+                .andExpectAll(
+                        status().isBadRequest(),
+                        openApi().isValid(OpenApiInteractionValidator
+                                .createFor("static/openapi.json")
+                                .withWhitelist(ValidationErrorsWhitelist.create()
+                                        .withRule("Ignoring null title",
+                                                WhitelistRules.messageHasKey("validation.request.body.schema.type")))
+                                .build())
+                );
+    }
+
 }
